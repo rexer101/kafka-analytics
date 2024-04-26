@@ -1,3 +1,4 @@
+{
     "car_id":"485394MS8SPL93450",
     "display_name":"Gretchen's Tesla",
     "model":"Y",
@@ -52,3 +53,4 @@
     "tpms_pressure_rl":3.5,
     "tpms_pressure_rr":2.2,
     "timestamp":1713961540733
+}

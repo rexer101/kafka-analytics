@@ -6,6 +6,7 @@ services:
   
   consumer:
     image: consumer
+    container_name: Consumer
     build:
       context: .
       dockerfile: ./Consumer/Dockerfile
@@ -15,7 +16,8 @@ services:
       - VehiclesDatabase__ConnectionString=mongodb://sa:Password123@mongodb:27017/vehiclesStore?authSource=admin
     depends_on:
       - mongodb
-      - kafka
+      # - kafka
+      # - init-kafka
   
   mongodb:
     image: 'mongo:7.0.0'
@@ -29,78 +31,79 @@ services:
     volumes:
       - 'mongodata:/var/lib/data'
 
-  emqx-enterprise:
-    image: emqx/emqx-enterprise:5.0.4
-    container_name: emqx
-    healthcheck:
-      test: ["CMD", "emqx", "ping"]
-      interval: 10s
-      timeout: 10s
-      retries: 12
-    ports:
-      - 1883:1883
-      - 18083:18083
-    volumes:
-      - ./emqx/cluster.hocon:/opt/emqx/data/configs/cluster.hocon
-      - ./emqx/api_secret:/opt/emqx/data/api_secret
-    environment:
-      EMQX_DASHBOARD__BOOTSTRAP_USERS_FILE: '"/opt/emqx/data/api_secret"'
-    depends_on:
-      - kafka
+  # emqx-enterprise:
+  #   image: emqx/emqx-enterprise:5.0.4
+  #   container_name: emqx
+  #   healthcheck:
+  #     test: ["CMD", "emqx", "ping"]
+  #     interval: 10s
+  #     timeout: 10s
+  #     retries: 12
+  #   ports:
+  #     - 1883:1883
+  #     - 18083:18083
+  #   volumes:
+  #     - ./emqx/cluster.hocon:/opt/emqx/data/configs/cluster.hocon
+  #     - ./emqx/api_secret:/opt/emqx/data/api_secret
+  #   environment:
+  #     EMQX_DASHBOARD__BOOTSTRAP_USERS_FILE: '"/opt/emqx/data/api_secret"'
+#     depends_on:
+#       - kafka
 
-  mqttx-simulate:
-    image: emqx/mqttx-cli:v1.9.3
-    container_name: mqttx-simulate
-    command:
-      - /bin/sh
-      - -c
-      - |
-        mqttx simulate -sc tesla -c 1 -h emqx-enterprise
-    depends_on:
-      emqx-enterprise:
-        condition: service_healthy
+  # mqttx-simulate:
+  #   image: emqx/mqttx-cli:v1.9.3
+  #   container_name: mqttx-simulate
+  #   command:
+  #     - /bin/sh
+  #     - -c
+  #     - |
+  #       mqttx simulate -sc tesla -c 1 -h emqx-enterprise
+#     depends_on:
+#       emqx-enterprise:
+#         condition: service_healthy
 
-  zookeeper:
-    image: docker.io/bitnami/zookeeper:3.9
-    container_name: zookeeper
-    ports:
-      - "2182:2182"
-    environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
+  # zookeeper:
+  #   image: docker.io/bitnami/zookeeper:3.9
+  #   container_name: zookeeper
+  #   ports:
+  #     - "2182:2182"
+  #   environment:
+  #     - ALLOW_ANONYMOUS_LOGIN=yes
 
-  kafka:
-    image: docker.io/bitnami/kafka:3.4
-    container_name: kafka
-    ports:
-      - "9092:9092"
-      - "9094:9094"
-    environment:
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
-    depends_on:
-      - zookeeper
+  # kafka:
+  #   image: docker.io/bitnami/kafka:3.4
+  #   container_name: kafka
+  #   ports:
+  #     - "9092:9092"
+  #     - "9094:9094"
+  #   environment:
+  #     - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+  #     - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+  #     - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
+  #     - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+  #   depends_on:
+  #     - zookeeper
 
-  init-kafka:
-    image: confluentinc/cp-kafka:6.1.1
-    depends_on:
-      - kafka
-    entrypoint: [ '/bin/sh', '-c' ]
-    command: |
-      "
-      # blocks until kafka is reachable
-      kafka-topics --bootstrap-server kafka:9092 --list
-      echo -e 'Creating kafka topics'
-      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic trucks --replication-factor 1 --partitions 1
+  # init-kafka:
+  #   image: confluentinc/cp-kafka:6.1.1
+  #   container_name: InitiKafka
+  #   depends_on:
+  #     - kafka
+  #   entrypoint: [ '/bin/sh', '-c' ]
+  #   command: |
+  #     "
+  #     # blocks until kafka is reachable
+  #     kafka-topics --bootstrap-server kafka:9092 --list
+  #     echo -e 'Creating kafka topics'
+  #     kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic trucks --replication-factor 1 --partitions 1
 
-      echo -e 'Successfully created the following topics:'
-      kafka-topics --bootstrap-server kafka:9092 --list
-      "
+  #     echo -e 'Successfully created the following topics:'
+  #     kafka-topics --bootstrap-server kafka:9092 --list
+  #     "
 
-# networks:
-#   emqx-net:
-#     name: emqx-net
+networks:
+  emqx-net:
+    name: emqx-net
 
 volumes:
   mongodata:

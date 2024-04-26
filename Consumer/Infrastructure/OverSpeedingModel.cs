@@ -5,7 +5,10 @@ namespace Consumer.Infrastruture;
 
 public class OverSpeedingModel
 {
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string? Id {get; set;}
     public string? car_id { get; set; }
     public int speed { get; set; }
-    public string? timestamp { get; set; }
+    public long timestamp { get; set; }
 }
