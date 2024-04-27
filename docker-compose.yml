@@ -4,32 +4,32 @@ version: '3.4'
 
 services:
   
-  consumer:
-    image: consumer
-    container_name: Consumer
-    build:
-      context: .
-      dockerfile: ./Consumer/Dockerfile
-    ports:
-      - 5102:5102
-    environment:
-      - VehiclesDatabase__ConnectionString=mongodb://sa:Password123@mongodb:27017/vehiclesStore?authSource=admin
-    depends_on:
-      - mongodb
-      # - kafka
-      # - init-kafka
+  # consumer:
+  #   image: consumer
+  #   container_name: Consumer
+  #   build:
+  #     context: .
+  #     dockerfile: ./Consumer/Dockerfile
+  #   ports:
+  #     - 5102:5102
+  #   environment:
+  #     - VehiclesDatabase__ConnectionString=mongodb://sa:Password123@mongodb:27017/vehiclesStore?authSource=admin
+  #   depends_on:
+  #     - mongodb
+  #     # - kafka
+  #     # - init-kafka
   
-  mongodb:
-    image: 'mongo:7.0.0'
-    ports:
-    - '7951:27017'
-    container_name: mongodb
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=sa
-      - MONGO_INITDB_ROOT_PASSWORD=Password123
-      - MONGO_INITDB_DATABASE=vehiclesStore
-    volumes:
-      - 'mongodata:/var/lib/data'
+  # mongodb:
+  #   image: 'mongo:7.0.0'
+  #   ports:
+  #   - '7951:27017'
+  #   container_name: mongodb
+  #   environment:
+  #     - MONGO_INITDB_ROOT_USERNAME=sa
+  #     - MONGO_INITDB_ROOT_PASSWORD=Password123
+  #     - MONGO_INITDB_DATABASE=vehiclesStore
+  #   volumes:
+  #     - 'mongodata:/var/lib/data'
 
   # emqx-enterprise:
   #   image: emqx/emqx-enterprise:5.0.4
@@ -101,10 +101,17 @@ services:
   #     kafka-topics --bootstrap-server kafka:9092 --list
   #     "
 
-networks:
-  emqx-net:
-    name: emqx-net
+  dashboard:
+    build: 
+        context: .
+        dockerfile: Dashboard/Dockerfile
+    container_name: dashboard
+    ports:
+       - "4200:80"
+# networks:
+#   emqx-net:
+#     name: emqx-net
 
-volumes:
-  mongodata:
-    driver: local
+# volumes:
+#   mongodata:
+#     driver: local
