@@ -1444,24 +1444,30 @@
     ]
   },
   "packageFolders": {
-    "/home/ravikant/.nuget/packages/": {}
+    "C:\\Users\\ravik\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/ravikant/Stream analytics assignment/Server/Consumer/Consumer.csproj",
+      "projectUniqueName": "C:\\Users\\ravik\\Downloads\\SS\\kafka-analytics\\Consumer\\Consumer.csproj",
       "projectName": "Consumer",
-      "projectPath": "/home/ravikant/Stream analytics assignment/Server/Consumer/Consumer.csproj",
-      "packagesPath": "/home/ravikant/.nuget/packages/",
-      "outputPath": "/home/ravikant/Stream analytics assignment/Server/Consumer/obj/",
+      "projectPath": "C:\\Users\\ravik\\Downloads\\SS\\kafka-analytics\\Consumer\\Consumer.csproj",
+      "packagesPath": "C:\\Users\\ravik\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ravik\\Downloads\\SS\\kafka-analytics\\Consumer\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+      ],
       "configFilePaths": [
-        "/home/ravikant/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\ravik\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1474,6 +1480,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -1516,7 +1527,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.103/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

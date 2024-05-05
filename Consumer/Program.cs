@@ -12,7 +12,16 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHostedService<ConsumerService>();
 builder.Services.AddSingleton<OverSpeedingService>();
 builder.Services.AddSingleton<RawDataService>();
-
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        b =>
+        {
+            b.AllowAnyOrigin();
+            b.AllowAnyMethod();
+            b.AllowAnyHeader();
+        });
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -20,7 +29,7 @@ var app = builder.Build();
     app.UseSwagger();
     app.UseSwaggerUI();
 
-
+app.UseCors();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

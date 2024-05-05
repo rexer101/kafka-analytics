@@ -35,7 +35,7 @@ namespace Consumer.Services;
             {
                 ProcessKafkaMessage(stoppingToken);
 
-                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+                //await Task.Delay(TimeSpan.FromSeconds(1), stoppingToken);
             }
 
             _consumer.Close();
@@ -50,7 +50,7 @@ namespace Consumer.Services;
                 var message = consumeResult.Message.Value;
 
                 var kafkaMessage = JsonConvert.DeserializeObject<Messages>(message);
-
+                Console.WriteLine(message);
                 if(kafkaMessage != null)
                 {
                     var rawData = new RawModel
@@ -74,7 +74,7 @@ namespace Consumer.Services;
                     };
                     _rawDataService.CreateAsync(rawData).WaitAsync(stoppingToken);
 
-                    if(kafkaMessage.speed > 120)
+                    if(kafkaMessage.speed > 195)
                     {
                         var overSpeedData = new OverSpeedingModel
                         {
